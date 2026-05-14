@@ -1,3 +1,4 @@
+// hello
 class LivingRoom extends AdventureScene {
     constructor() {
         super("livingRoom", "Living Room");
