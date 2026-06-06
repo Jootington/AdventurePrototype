@@ -125,7 +125,7 @@ class MasterBedroom extends AdventureScene {
         this.addInteractable(this.w * 0.43, this.h * 0.85,"sock", "white sock", "white sock", "white", 0.4);
         this.addInteractable(this.w * 0.87, this.h * 0.34, "alarmClock", "alarm clock", "alarm clock", "green", 0.55);
         this.addInteractable(this.w * 0.4, this.h * 0.32, "lipstick", "lipstick", "lipstick", "red", 0.4);
-        this.addInteractable(this.w * 0.27, this.h * 0.33,"glitter", "glittery eyeshadow ", "glittery eyeshadow", "sparkly", 0.35);
+        this.addInteractable(this.w * 0.27, this.h * 0.33,"glitter", "glittery eyeshadow ", "glittery eyeshadow", "sheen", 0.35);
 
         this.add.text(this.w * 0.06, this.h * 0.76, "return to living room")
             .setFontSize(this.s * 1.8)
@@ -174,8 +174,9 @@ class Bathroom extends AdventureScene {
 
         this.addInteractable(this.w * 0.445, this.h * 0.344, "soap", "Bar of Soap", "Soap Bar", "blue", 0.4);
         this.addInteractable(this.w * 0.2, this.h * 0.55, "loofa", "shower loofa", "Loofa", "Green", 0.4);
-        this.addInteractable(this.w * 0.77, this.h * 0.42, "toiletPaper", "roll of toilet paper", "Toilet Paper", "white")        
+        this.addInteractable(this.w * 0.767, this.h * 0.425, "toiletPaper", "roll of toilet paper", "Toilet Paper", "white")        
         .setDepth(2);
+        
         this.addInteractable(this.w * 0.326, this.h * 0.378, "toothbrush", "a toothbrush", "Toothbrush", "blue", 0.52);
 
         this.add.text(this.w * 0.68, this.h * 0.8, "return to living room")
@@ -218,7 +219,7 @@ class Kitchen extends AdventureScene {
         this.addInteractable(this.w * 0.4, this.h * 0.33, "banana", "Banana", "Banana", "yellow", 0.5);
         this.addInteractable(this.w * 0.5, this.h * 0.32, "apple", "Apple", "Apple", "red", 0.4);
         this.addInteractable(this.w * 0.6, this.h * 0.32, "avacado", "Overripe Avacado", "Overripe Avacado", "black", 0.4);
-        this.addInteractable(this.w * 0.77, this.h * 0.34, "tinFoil", "some tin foil", "Tin Foil", "metallic", 0.75);
+        this.addInteractable(this.w * 0.77, this.h * 0.34, "tinFoil", "some tin foil", "Tin Foil", "sheen", 0.75);
 
         this.add.text(this.w * 0.03, this.h * 0.8, "return to living room")
             .setFontSize(this.s * 1.8)
@@ -372,8 +373,8 @@ class Intro extends Phaser.Scene {
                     this.input.once('pointerdown', () => {
                         this.cameras.main.fade(1000, 0, 0, 0);
                         this.time.delayedCall(1000, () => {
-                            this.scene.start('livingRoom');
-                          });
+                        this.scene.start("livingRoom", { inventory: [] });                          
+                        });
                         })
                     }
                 });
@@ -429,11 +430,17 @@ class Outro extends Phaser.Scene {
         let envelopeFlat = this.add.image(960, 240, "envelopeFlat")
             .setScale(4.5);
 
+            
         let types = this.inventory.map(item => item.type);
 
         //sheen flags
-        let hasSparkly = types.includes("sparkly");
-        let hasMetallic = types.includes("metallic");
+        let hasSparkly = this.inventory.some(
+            item => item.name === "glittery eyeshadow"
+        );
+
+        let hasMetallic = this.inventory.some(
+            item => item.name === "Tin Foil"
+        );
 
         //black/white flags
         let hasWhite = types.includes("white");

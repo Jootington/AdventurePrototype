@@ -24,7 +24,8 @@ class AdventureScene extends Phaser.Scene {
      */
     init(data) {
         this.inventory = data.inventory || [];
-    }
+        console.log("Inventory on room enter:", this.inventory);
+}
 
     /**
      * @param {string} key  A unique Phaser scene key (e.g. `"tunnel"`).
@@ -36,7 +37,7 @@ class AdventureScene extends Phaser.Scene {
     }
 //* method for initalizing items since they all have the same behavior
 // can be inspected, picked up, and have a designated 'types' */
-addInteractable(x, y, imageKey, hoverText, itemName, itemType, scale = 1) {
+    addInteractable(x, y, imageKey, hoverText, itemName, itemType, scale = 1) {
 
     let item = this.add.image(x, y, imageKey)
         .setScale(scale)
@@ -113,8 +114,6 @@ addInteractable(x, y, imageKey, hoverText, itemName, itemType, scale = 1) {
     hasType(type) {
         return this.inventory.some(item => item.type === type);
     }
-
-
 
 
     /**
@@ -227,8 +226,8 @@ addInteractable(x, y, imageKey, hoverText, itemName, itemType, scale = 1) {
      * @param {string} item Item name.
      * @returns {boolean}
      */
-    hasItem(item) {
-        return this.inventory.includes(item);
+    hasItem(itemName) {
+        return this.inventory.some(item => item.name === itemName);
     }
 
     /**
@@ -238,14 +237,16 @@ addInteractable(x, y, imageKey, hoverText, itemName, itemType, scale = 1) {
      * @param {string} item Item name. Short and consistent works best (e.g. `"key"`, not `"a shiny key"`).
      */
     gainItem(item) {
-        if (this.inventory.includes(item)) {
-            console.warn('gaining item already held:', item);
+        if (this.inventory.some(e => e.name === item.name)) {
+            console.warn('gaining item already held:', item.name);
             return;
         }
+
         this.inventory.push(item);
         this.updateInventory();
+
         for (let text of this.inventoryTexts) {
-            if (text.text == item) {
+            if (text.text === item.name) {
                 this.tweens.add({
                     targets: text,
                     x: { from: text.x - 20, to: text.x },
